@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import Taro from '@tarojs/taro'
 import defaultAvatar from '../../../assets/logo.png'
 import { getMyInfo, login } from '../../../api/user';
+import { wxLogin } from '../../../api/common';
 import { setToken } from '../../../utils/auth';
 import { BASE_URI } from '../../../utils/request';
 
@@ -20,7 +21,6 @@ export interface IUser {
   avatarUrl: string
   wxOpenId: string
   isLogin: boolean
-  isSubscribe: boolean
 }
 
 export interface MyInfoDto {
@@ -35,7 +35,6 @@ export const useUserStore = defineStore('user', {
     avatarUrl: defaultAvatar,
     wxOpenId: '',
     isLogin: false,
-    isSubscribe: false
   }),
   getters: {
 
@@ -65,6 +64,7 @@ export const useUserStore = defineStore('user', {
       this.username = res.username
       this.nickName = res.nickName
       this.avatarUrl = `${BASE_URI}${res.avatarUrl}`
+      this.wxOpenId = res.wxOpenId
       Taro.showToast({
         title: `欢迎回来：${this.nickName}`,
         duration: 1500,
@@ -73,6 +73,22 @@ export const useUserStore = defineStore('user', {
       });
       this.isLogin = true
 
+    },
+
+    async wxLogin() {
+      try {
+        const r = await Taro.login()
+        await wxLogin({code: r.code})
+        Taro.showToast({
+          title: '订阅成功',
+          duration: 1500,
+          icon: 'none',
+          mask: false,
+        });
+        Taro.reLaunch({ url: '/pages/index/index' })
+      } catch (err) {
+        console.log(err);
+      }
     }
   }
 });

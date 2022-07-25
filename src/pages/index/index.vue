@@ -14,14 +14,13 @@
       <div class="flex items-center justify-between w-full">
         <div class="flex items-center">
           <span>订阅状态：</span>
-          <span v-if="!userStore.isSubscribe" class="text-red-500">未订阅</span>
-          <span v-if="userStore.isSubscribe" class="text-green-500"
-            >已订阅</span
-          >
+          <span v-if="!userStore.wxOpenId" class="text-red-500">未订阅</span>
+          <span v-if="userStore.wxOpenId" class="text-green-500">已订阅</span>
         </div>
         <div class="text-custom-primary">
-          <span v-if="!userStore.isSubscribe">开始订阅</span>
-          <span v-if="userStore.isSubscribe">了解更多</span>
+          <span v-if="!userStore.wxOpenId" @click="handleWxLogin"
+            >开始订阅</span
+          >
         </div>
       </div>
     </nut-cell>
@@ -59,17 +58,32 @@
         @click="handleRouter('feedBack')"
       ></nut-cell>
     </nut-cell-group>
+    <!-- 授权 -->
+    <nut-popup
+      pop-class="popclass"
+      :style="{ width: '75%' }"
+      v-model:visible="showAuthLogin"
+      :z-index="100"
+    >
+      <div class="p-5">
+        <div class="w-full text-center text-sm mb-4">点击按钮授权登入</div>
+        <nut-button block type="success" @click="userStore.wxLogin"
+          >绑定Tik对局助手</nut-button
+        >
+      </div>
+    </nut-popup>
   </div>
 </template>
 
 <script setup>
-import { reactive, toRefs, onMounted } from 'vue'
+import { reactive, toRefs, onMounted, ref } from 'vue'
 import Taro, { useReady } from '@tarojs/taro'
 import { useUserStore } from '../../store'
 import { getToken } from '../../utils/auth'
 import svgs from '../../assets/svgs'
 
 const userStore = useUserStore()
+const showAuthLogin = ref(false)
 
 useReady(async () => {
   if (getToken()) {
@@ -77,7 +91,7 @@ useReady(async () => {
       mac: 'weixin',
       clientVersion: 'weixin',
     })
-  }else{
+  } else {
     userStore.isLogin = false
   }
 })
@@ -137,5 +151,12 @@ function handleRouter(name) {
       })
       break
   }
+}
+
+function handleWxLogin() {
+  if (userStore.isLogin) {
+    return
+  }
+  showAuthLogin = !showAuthLogin
 }
 </script>

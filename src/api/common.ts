@@ -23,3 +23,12 @@ export const getCarryChamp = async data => {
     data
   })
 }
+
+export const wxLogin = async data => {
+  return await request({
+    path: '/common/wxLogin',
+    method: 'GET',
+    data
+  })
+}
+
