@@ -1,9 +1,17 @@
 import request from "../utils/request";
 
-export const  getCaptcha = async data =>{
+export const login = async data => {
   return await request({
-    path:'/common/captcha',
-    method: 'GET',
+    path: '/user/login',
+    method: 'POST',
+    data
+  })
+}
+
+export const getMyInfo = async data => {
+  return await request({
+    path: '/user/getMyInfo',
+    method: 'POST',
     data
   })
 }

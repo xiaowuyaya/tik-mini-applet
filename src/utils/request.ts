@@ -15,7 +15,8 @@ export default async (options: IOption) => {
     url: `${BASE_URI}${options.path}`,
     method: options.method,
     data: {
-      data: { _t: Date.now(), ...options.data },
+      _t: Date.now(),
+      ...options.data
     },
     header: {
       'Content-Type': 'application/json',
@@ -28,24 +29,18 @@ export default async (options: IOption) => {
     let msg = res.data['msg'] || ''
     if (code === 200) {
       return res.data.data;
-    } else {
+    } else if (code == 11001 || code == 11002) {
       Taro.showToast({
-        title: msg,
+        title: `当前登入状态异常，请重新登入。`,
         duration: 1500,
         icon: 'none',
         mask: false,
       });
-      if (code == 11001 || code == 11002) {
+      removeToken()
+    } else {
+      {
         Taro.showToast({
-          title: `当前登入状态异常，请重新登入。`,
-          duration: 1500,
-          icon: 'none',
-          mask: false,
-        });
-        removeToken()
-      } else {
-        Taro.showToast({
-          title: `code ${code} 请求失败，请重新尝试`,
+          title: msg,
           duration: 1500,
           icon: 'none',
           mask: false,
@@ -54,13 +49,6 @@ export default async (options: IOption) => {
     }
   }).catch(err => {
     let { message } = err
-    if (message == 'Network Error') {
-      message = '后端接口连接异常'
-    } else if (message.includes('timeout')) {
-      message = '系统接口请求超时'
-    } else if (message.includes('Request failed with status code')) {
-      message = '系统接口' + message.substr(message.length - 3) + '异常'
-    }
     Taro.showToast({
       title: message,
       duration: 1500,

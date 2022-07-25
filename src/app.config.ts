@@ -4,6 +4,9 @@ export default {
   pages: [
     'pages/index/index',
     'pages/login/index',
+    'pages/blacklist/index',
+    'pages/rank-data/index',
+    'pages/my-carry/index',
   ],
   window: {
     backgroundTextStyle: 'light',

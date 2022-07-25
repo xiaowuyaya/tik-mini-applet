@@ -1,20 +1,12 @@
-/*
- * @Author: your name
- * @Date: 2022-01-21 15:46:47
- * @LastEditTime: 2022-01-21 15:58:44
- * @LastEditors: your name
- * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- * @FilePath: /nutui-demo/taro/src/app.ts
- */
 import { createApp } from 'vue';
-import { Icon, Button, Input, Form,FormItem,Cell,CellGroup } from '@nutui/nutui-taro';
+import { Icon, Button, Input, Form, FormItem, Cell, CellGroup, Layout, Row, Col, Avatar, Grid, GridItem, Toast, Table, Picker,  Popup, OverLay } from '@nutui/nutui-taro';
 import { createPinia } from 'pinia'
 import './app.scss';
 import 'windi.css';
 
 
 //这里添加用到的 nutui 组件
-const nutuiComponents = [Button, Input,Form,FormItem,Cell,CellGroup];
+const nutuiComponents = [Button, Input, Form, FormItem, Cell, CellGroup, Layout, Row, Col, Avatar, Grid, GridItem, Toast, Table, Picker,  Popup, OverLay];
 
 const App = createApp({
   onShow(_options) { }
