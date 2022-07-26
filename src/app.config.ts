@@ -7,6 +7,7 @@ export default {
     'pages/blacklist/index',
     'pages/rank-data/index',
     'pages/my-carry/index',
+    'pages/spells-monitor/index',
   ],
   window: {
     backgroundTextStyle: 'light',

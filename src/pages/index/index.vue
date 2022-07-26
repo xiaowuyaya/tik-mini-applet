@@ -106,6 +106,26 @@ function toLogin() {
 function handleRouter(name) {
   console.log(name)
   switch (name) {
+    case 'spellsMonitor':
+      if (!userStore.isLogin) {
+        Taro.showToast({
+          title: `请先登入后再试试看`,
+          duration: 1500,
+          icon: 'none',
+          mask: false,
+        })
+        return
+      }
+      if (!userStore.wxOpenId) {
+        Taro.showToast({
+          title: `请授权登入再试试看`,
+          duration: 1500,
+          icon: 'none',
+          mask: false,
+        })
+        return
+      }
+      Taro.navigateTo({ url: '/pages/spells-monitor/index' })
     case 'blacklist':
       if (!userStore.isLogin) {
         Taro.showToast({

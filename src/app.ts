@@ -1,12 +1,12 @@
 import { createApp } from 'vue';
-import { Icon, Button, Input, Form, FormItem, Cell, CellGroup, Layout, Row, Col, Avatar, Grid, GridItem, Toast, Table, Picker,  Popup, OverLay } from '@nutui/nutui-taro';
+import { Icon, Button, Input, Form, FormItem, Cell, CellGroup, Layout, Row, Col, Avatar, Grid, GridItem, Toast, Table, Picker,  Popup, OverLay, Empty, InputNumber  } from '@nutui/nutui-taro';
 import { createPinia } from 'pinia'
 import './app.scss';
 import 'windi.css';
 
 
 //这里添加用到的 nutui 组件
-const nutuiComponents = [Button, Input, Form, FormItem, Cell, CellGroup, Layout, Row, Col, Avatar, Grid, GridItem, Toast, Table, Picker,  Popup, OverLay];
+const nutuiComponents = [Button, Input, Form, FormItem, Cell, CellGroup, Layout, Row, Col, Avatar, Grid, GridItem, Toast, Table, Picker,  Popup, OverLay, Empty, InputNumber ];
 
 const App = createApp({
   onShow(_options) { }
