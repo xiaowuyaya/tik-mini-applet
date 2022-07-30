@@ -1,0 +1,52 @@
+{
+	"easycom": {
+		"autoscan": true,
+		"custom": {
+			"^u-(.*)": "vk-uview-ui/components/u-$1/u-$1.vue"
+		}
+	},
+	"pages": [
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "Tik 对局助手"
+			}
+		},
+		{
+			"path": "pages/login/index",
+			"style": {
+				"navigationBarTitleText": "登录页",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/blacklist/index",
+			"style": {
+				"navigationBarTitleText": "我的黑名单"
+			}
+		},
+		{
+			"path": "pages/my-carry/index",
+			"style": {
+				"navigationBarTitleText": "本命英雄查询"
+			}
+		},
+		{
+			"path": "pages/rank-data/index",
+			"style": {
+				"navigationBarTitleText": "隐藏分查询"
+			}
+		},
+		{
+			"path": "pages/spells-monitor/index",
+			"style": {
+				"navigationBarTitleText": "召唤师技能监听"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "white",
+		"navigationBarTitleText": "Tik 对局助手",
+		"navigationBarBackgroundColor": "#6190E8"
+	}
+}

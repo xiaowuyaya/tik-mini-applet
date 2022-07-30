@@ -1,35 +1,32 @@
 <template>
-  <div class="p-4">
-    <nut-table :columns="columnData" :data="blackList" :striped="true">
-      <template #nodata>
-        <div class="no-data">当前账号无黑名单数据，或网络异常</div>
-      </template>
-    </nut-table>
-  </div>
+  <view class="pt-4">
+    <u-table>
+      <u-tr>
+        <u-th>大区</u-th>
+        <u-th>账号</u-th>
+        <u-th>拉黑玩家</u-th>
+        <!-- <u-th>原因</u-th> -->
+      </u-tr>
+      <u-tr v-for="(item, index) in blackList" :key="index">
+        <u-td>{{item.environment}}</u-td>
+        <u-td>{{item.summonerName}}</u-td>
+        <u-td>{{item.banName}}</u-td>
+        <!-- <u-td>{{item.reason}}</u-td> -->
+      </u-tr>
+    </u-table>
+  </view>
 </template>
 
-<script setup>
-import { reactive, ref } from 'vue'
-import Taro, { useReady } from '@tarojs/taro'
-import { getAllBlacklist } from '../../api/blacklist'
+<script setup lang="ts">
+import { ref } from 'vue';
+import { onReady } from '@dcloudio/uni-app'
+import { getAllBlacklist } from '../../api/user';
 
-const columnData = ref([
-  {
-    title: '大区',
-    key: 'environment',
-  },
-  {
-    title: '账号',
-    key: 'summonerName',
-  },
-  {
-    title: '拉黑玩家',
-    key: 'banName',
-  }
-])
-const blackList = ref([])
+const blackList = ref<any>([])
 
-useReady(async () => {
+onReady(async () => {
   blackList.value = await getAllBlacklist()
 })
 </script>
+
+<style></style>

@@ -1,68 +1,60 @@
 <template>
-  <div class="px-4 pt-26 bg-white">
+  <view class="px-4 pt-[148rpx] bg-white !h-full">
     <!-- title -->
-    <div class="px-6">
-      <div class="font-black text-3xl">登入</div>
-      <div class="text-lg text-gray-700 mt-1">欢迎来到 Tik对局助手</div>
-    </div>
-    <!-- form -->
-    <div class="mt-16 px-2">
-      <nut-form>
-        <nut-form-item label="用户名" label-width="68">
-          <input
-            class=""
+    <view class="px-6">
+      <view class="font-black text-3xl">登入</view>
+      <view class="text-lg text-gray-700 mt-1">欢迎来到 Tik对局助手</view>
+    </view>
+    <div class="mt-14 px-[60rpx]">
+      <u-form :model="loginForm" label-width="120">
+        <u-form-item label="用户名"
+          ><u-input
             v-model="loginForm.username"
             placeholder="请输入用户名"
             type="text"
             max-length="16"
-          />
-        </nut-form-item>
-        <nut-form-item label="密码" label-width="68">
-          <input
-            class=""
+        /></u-form-item>
+        <u-form-item label="密码"
+          ><u-input
             v-model="loginForm.password"
             placeholder="请输入密码"
             type="password"
             max-length="32"
+        /></u-form-item>
+        <u-form-item label="验证码"
+          ><u-input
+            class="!w-[52%]"
+            v-model="loginForm.verifyCode"
+            placeholder="请输入验证码"
+            type="text"
+            max-length="4"
           />
-        </nut-form-item>
-        <nut-form-item label="验证码" label-width="68">
-          <div class="flex justify-between">
-            <input
-              class=" w-[52%]"
-              v-model="loginForm.verifyCode"
-              placeholder="请输入验证码"
-              type="text"
-              max-length="4"
-            />
+
+          <template #right>
             <img
-              class="h-[50rpx] w-[48%] border-none"
+              class="!h-[60rpx] !w-[160rpx] border-none"
               :src="captchaImg"
               @click="getCaptchaImg"
             />
-          </div>
-        </nut-form-item>
-        <nut-form-item class="!p-0"></nut-form-item>
-      </nut-form>
+          </template>
+        </u-form-item>
+      </u-form>
       <div class="mt-1 p-4 flex justify-between">
-        <div class="text-blue-500 text-sm">忘记密码</div>
-        <div class="text-blue-500 text-sm">注册账号</div>
+        <div class="text-blue-500 text-sm" @click="noticeClient">忘记密码</div>
+        <div class="text-blue-500 text-sm" @click="noticeClient">注册账号</div>
       </div>
-      <div class="mt-2 ">
-        <nut-button block size="large" type="primary" @click="handleLogin"
-          >登入</nut-button
-        >
-      </div>
+      <view class="mt-2"
+        ><u-button type="primary" @click="handleLogin">登入</u-button></view
+      >
     </div>
-  </div>
+  </view>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { onReady } from '@dcloudio/uni-app'
 import { reactive, ref } from 'vue'
-import Taro, { useReady } from '@tarojs/taro'
 import { getCaptcha } from '../../api/common'
-import { useUserStore } from '../../store'
-
+import { useUserStore } from '../../stores/user'
 const userStore = useUserStore()
 
 const loginForm = reactive({
@@ -73,28 +65,46 @@ const loginForm = reactive({
   clientVersion: 'weixin',
   verifyCode: '',
 })
-
 const captchaImg = ref('')
 
-useReady(async () => {
+onReady(async () => {
   await getCaptchaImg()
 })
-
 async function getCaptchaImg() {
-  const res = await getCaptcha()
+  const res: any = await getCaptcha()
   loginForm.captchaId = res.id
   captchaImg.value = res.img
 }
-
 async function handleLogin() {
+  if (
+    loginForm.username == '' &&
+    loginForm.password == '' &&
+    loginForm.verifyCode == ''
+  ) {
+    uni.showToast({
+      title: '请输入用户名，密码以及验证码内容',
+      icon: 'none',
+    })
+    return
+  }
+
   try {
-    await userStore.doLogin(loginForm)
+    await userStore.handleLogin(loginForm)
     setTimeout(() => {
-      Taro.reLaunch({ url: '/pages/index/index' })
+      uni.reLaunch({ url: '/pages/index/index' })
     }, 1000)
   } catch (err) {
     console.log(err)
     await getCaptchaImg()
   }
 }
+
+function noticeClient() {
+  uni.showToast({
+    title: '仅允许在客户端进行此操作',
+    icon: 'none',
+  })
+}
 </script>
+
+<style></style>

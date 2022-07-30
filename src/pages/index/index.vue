@@ -1,93 +1,123 @@
 <template>
-  <div class="p-4">
-    <!-- header box -->
-    <div class="bg-custom-primary text-white px-4 py-6 rounded">
-      <div class="flex items-center justify-start">
-        <nut-avatar size="68" :icon="userStore.avatarUrl"></nut-avatar>
-        <div class="flex flex-col ml-5" @click="toLogin">
-          <div class="font-bold text-lg">{{ userStore.nickName }}</div>
-          <div class="text-sm mt-1 text-gray-300">{{ userStore.username }}</div>
-        </div>
-      </div>
-    </div>
-    <nut-cell>
-      <div class="flex items-center justify-between w-full">
-        <div class="flex items-center">
+  <view class="p-4">
+    <view class="bg-custom-primary text-white px-4 py-4 rounded">
+      <view class="flex items-center justify-start" @click="toLogin">
+        <u-avatar
+          :src="userStore.avatarUrl"
+          mode="square"
+          size="large"
+        ></u-avatar>
+        <view class="flex flex-col ml-5">
+          <view class="font-bold text-lg">{{ userStore.nickName }}</view>
+          <view class="text-sm mt-1 text-gray-300">{{
+            userStore.username
+          }}</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="p-3 mt-2 bg-white shadow-sm">
+      <view class="flex items-center justify-between w-full">
+        <view class="flex items-center">
           <span>订阅状态：</span>
           <span v-if="!userStore.wxOpenId" class="text-red-500">未订阅</span>
           <span v-if="userStore.wxOpenId" class="text-green-500">已订阅</span>
-        </div>
-        <div class="text-custom-primary">
-          <span v-if="!userStore.wxOpenId" @click="handleWxLogin"
-            >开始订阅</span
-          >
-        </div>
-      </div>
-    </nut-cell>
-    <nut-grid :column-num="2" :border="false" icon-size="36" icon-color="#fff">
-      <nut-grid-item
-        :icon="svgs.monitor"
-        text="召唤师技能提醒"
-        @click="handleRouter('spellsMonitor')"
-      ></nut-grid-item>
-      <nut-grid-item
-        :icon="svgs.rank_data"
-        text="隐藏分查询"
-        @click="handleRouter('rankData')"
-      ></nut-grid-item>
-    </nut-grid>
-    <nut-cell-group>
-      <nut-cell
-        title="我的本命英雄"
-        to="/"
-        @click="handleRouter('myCarry')"
-      ></nut-cell>
-      <nut-cell
-        title="黑名单列表"
-        is-link
-        @click="handleRouter('blacklist')"
-      ></nut-cell>
-      <nut-cell
-        title="英雄时刻"
-        is-link
-        @click="handleRouter('heroTime')"
-      ></nut-cell>
-      <nut-cell
-        title="问题反馈"
-        is-link
-        @click="handleRouter('feedBack')"
-      ></nut-cell>
-    </nut-cell-group>
-    <!-- 授权 -->
-    <nut-popup
-      pop-class="popclass"
-      :style="{ width: '75%' }"
-      v-model:visible="showAuthLogin"
-      :z-index="100"
+        </view>
+        <view class="text-custom-primary">
+          <span v-if="!userStore.wxOpenId" @click="handleWxBind">开始订阅</span>
+        </view>
+      </view>
+    </view>
+
+    <u-popup
+      v-model="showAuthLogin"
+      mode="center"
+      width="80%"
+      height="240rpx"
+      border-radius="8"
+      :closeable="true"
     >
-      <div class="p-5">
-        <div class="w-full text-center text-sm mb-4">点击按钮授权登入</div>
-        <nut-button block type="success" @click="userStore.wxLogin"
-          >绑定Tik对局助手</nut-button
+      <view class="p-4 h-full w-full flex flex-col justify-center items-center">
+        <div class="w-full text-center text-sm mb-4">
+          点击按钮绑定微信小程序
+        </div>
+        <u-button type="success" @click="userStore.bindWeApp">绑定</u-button>
+      </view>
+    </u-popup>
+
+    <view class="p-3 mt-2 bg-white shadow-sm">
+      <view class="flex items-center justify-evenly">
+        <view
+          class="flex pr-6 flex-col items-center justify-center"
+          @click="handleRouter('spellsMonitor')"
         >
-      </div>
-    </nut-popup>
-  </div>
+          <img class="w-[86rpx] h-[86rpx]" :src="svgs.monitor" alt="" />
+          <view class="mt-1 grid-text">召唤师技能监听</view>
+        </view>
+        <view
+          class="flex pl-6 flex-col items-center justify-center"
+          @click="handleRouter('rankData')"
+        >
+          <img class="w-[86rpx] h-[86rpx]" :src="svgs.rank_data" alt="" />
+          <view class="mt-1 grid-text">隐藏分查询</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="mt-2 shadow-sm">
+      <u-cell-group>
+        <u-cell-item
+          title="本命英雄查询"
+          @click="handleRouter('myCarry')"
+        ></u-cell-item>
+        <u-cell-item
+          title="我的黑名单"
+          @click="handleRouter('blacklist')"
+        ></u-cell-item>
+        <u-cell-item
+          title="英雄时刻"
+          @click="handleRouter('heroTime')"
+        ></u-cell-item>
+        <u-cell-item title="联系作者"></u-cell-item>
+      </u-cell-group>
+    </view>
+
+    <u-action-sheet
+      :list="logoutList"
+      v-model="showLoinout"
+      @click="hadnleLogout"
+    ></u-action-sheet>
+
+    <view
+      class="text-gray-300 absolute bottom-2 text-xs flex items-center justify-center w-full"
+    >
+      <text>lol-tool.com</text>
+    </view>
+  </view>
 </template>
 
-<script setup>
-import { reactive, toRefs, onMounted, ref } from 'vue'
-import Taro, { useReady } from '@tarojs/taro'
-import { useUserStore } from '../../store'
-import { getToken } from '../../utils/auth'
+<script setup lang="ts">
+import { onReady } from '@dcloudio/uni-app'
+import { useUserStore } from '../../stores/user'
 import svgs from '../../assets/svgs'
+import { ref } from 'vue'
+import { getToken, removeToken } from '../../utils/auth'
 
 const userStore = useUserStore()
-const showAuthLogin = ref(false)
 
-useReady(async () => {
+const showAuthLogin = ref(false)
+const showLoinout = ref(false)
+const logoutList = ref([
+  {
+    text: '退出登入',
+    color: 'red',
+    fontSize: 34,
+  },
+])
+
+onReady(async () => {
   if (getToken()) {
-    await userStore.myInfo({
+    await userStore.getInfo({
       mac: 'weixin',
       clientVersion: 'weixin',
     })
@@ -96,74 +126,29 @@ useReady(async () => {
   }
 })
 
-function toLogin() {
-  if (userStore.isLogin) {
+function handleRouter(name: string) {
+  if (!userStore.isLogin) {
+    uni.showToast({
+      title: '请先登入后再试试看',
+      icon: 'none',
+    })
     return
   }
-  Taro.navigateTo({ url: '/pages/login/index' })
-}
-
-function handleRouter(name) {
-  console.log(name)
   switch (name) {
     case 'spellsMonitor':
-      if (!userStore.isLogin) {
-        Taro.showToast({
-          title: `请先登入后再试试看`,
-          duration: 1500,
-          icon: 'none',
-          mask: false,
-        })
-        return
-      }
-      if (!userStore.wxOpenId) {
-        Taro.showToast({
-          title: `请授权登入再试试看`,
-          duration: 1500,
-          icon: 'none',
-          mask: false,
-        })
-        return
-      }
-      Taro.navigateTo({ url: '/pages/spells-monitor/index' })
+      uni.navigateTo({ url: '/pages/spells-monitor/index' })
+      break
     case 'blacklist':
-      if (!userStore.isLogin) {
-        Taro.showToast({
-          title: `请先登入后再试试看`,
-          duration: 1500,
-          icon: 'none',
-          mask: false,
-        })
-        return
-      }
-      Taro.navigateTo({ url: '/pages/blacklist/index' })
+      uni.navigateTo({ url: '/pages/blacklist/index' })
       break
     case 'rankData':
-      if (!userStore.isLogin) {
-        Taro.showToast({
-          title: `请先登入后再试试看`,
-          duration: 1500,
-          icon: 'none',
-          mask: false,
-        })
-        return
-      }
-      Taro.navigateTo({ url: '/pages/rank-data/index' })
+      uni.navigateTo({ url: '/pages/rank-data/index' })
       break
     case 'myCarry':
-      if (!userStore.isLogin) {
-        Taro.showToast({
-          title: `请先登入后再试试看`,
-          duration: 1500,
-          icon: 'none',
-          mask: false,
-        })
-        return
-      }
-      Taro.navigateTo({ url: '/pages/my-carry/index' })
+      uni.navigateTo({ url: '/pages/my-carry/index' })
       break
     case 'heroTime':
-      Taro.showToast({
+      uni.showToast({
         title: '开发中，暂未开放',
         duration: 1500,
         icon: 'none',
@@ -173,10 +158,36 @@ function handleRouter(name) {
   }
 }
 
-function handleWxLogin() {
+function toLogin() {
   if (userStore.isLogin) {
+    showLoinout.value = true
     return
   }
-  showAuthLogin = !showAuthLogin
+  uni.navigateTo({ url: '/pages/login/index' })
+}
+
+function hadnleLogout() {
+  removeToken()
+  uni.showToast({
+    title: '账号已退出',
+    icon: 'none',
+  })
+  setTimeout(() => {
+    userStore.resetUser()
+    uni.reLaunch({ url: '/pages/index/index' })
+  }, 1000)
+}
+
+function handleWxBind() {
+  if (!userStore.isLogin) {
+    uni.showToast({
+      title: '请先登入账号',
+      icon: 'none',
+    })
+    return
+  }
+  showAuthLogin.value = true
 }
 </script>
+
+<style></style>
