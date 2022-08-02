@@ -2,7 +2,7 @@ import request from "../utils/request";
 
 export const login = (data?: object | any) => {
   return request({
-    path: '/user/login',
+    path: '/user/wxLogin',
     method: 'POST',
     data
   })

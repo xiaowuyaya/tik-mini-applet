@@ -60,9 +60,7 @@ const userStore = useUserStore()
 const loginForm = reactive({
   username: '',
   password: '',
-  mac: 'weixin',
   captchaId: '',
-  clientVersion: 'weixin',
   verifyCode: '',
 })
 const captchaImg = ref('')
@@ -75,7 +73,7 @@ async function getCaptchaImg() {
   loginForm.captchaId = res.id
   captchaImg.value = res.img
 }
-async function handleLogin() {
+async function handleLogin(e) {
   if (
     loginForm.username == '' &&
     loginForm.password == '' &&
@@ -89,7 +87,9 @@ async function handleLogin() {
   }
 
   try {
-    await userStore.handleLogin(loginForm)
+    const res = await uni.getUserProfile({ desc: '完善账户信息' })
+    const { gender, avatarUrl } = res.userInfo
+    await userStore.handleLogin({ ...loginForm, gender, avatarUrl })
     setTimeout(() => {
       uni.reLaunch({ url: '/pages/index/index' })
     }, 1000)

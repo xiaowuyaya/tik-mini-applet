@@ -14,10 +14,10 @@ export interface IUser {
 export interface LoginDto {
   username: string;
   password: string;
-  mac: string;
   captchaId: string;
-  clientVersion: string;
   verifyCode: string;
+  gender: number;
+  avatarUrl: string;
 }
 
 export interface GetInfoDto {
