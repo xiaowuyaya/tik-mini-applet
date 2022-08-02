@@ -5,10 +5,7 @@
       v-if="!isShow"
       class="w-full h-[80%] flex flex-col justify-center items-center"
     >
-      <img
-        class="!border-none p-2 w-[480rpx]"
-        :src="noFind"
-      />
+      <img class="!border-none p-2 w-[480rpx]" :src="noFind" />
       <span class="font-black text-lg p-2">未获取到当前账号的对局数据</span>
       <span class="text-sm text-gray-600 p-2"
         >对局是否已经开始，或者尝试重新重新进入此页面</span
@@ -26,7 +23,7 @@
       </view>
       <view class="flex justify-evenly items-center p-2">
         <view class="text-sm text-gray-900">操作延迟时间：</view>
-        <nut-inputnumber class="ml-2" v-model="dalyTime" step="2" />
+        <u-number-box v-model="dalyTime" :min="0" :max="30"></u-number-box>
       </view>
       <!-- 主要显示 -->
       <view class="mt-2">
@@ -35,14 +32,14 @@
           v-for="(item, index) in wsData.playerlist"
           :key="index"
         >
-          <img :src="item.championImg" width="60px" height="60px" />
+          <img class="w-[110rpx] h-[110rpx]" :src="item.championImg" />
           <view class="flex flex-col justify-center px-2">
             <span class="font-bold text-sm">{{ item.summonerName }}</span>
             <span class="text-sm text-gray-600 mt-1">{{
               item.championName
             }}</span>
           </view>
-          <view class="flex">
+          <view class="flex items-center justify-center">
             <view
               class="flex flex-col items-center justify-center px-2"
               @click="
@@ -55,9 +52,8 @@
               "
             >
               <img
+                class="w-[90rpx] h-[90rpx]"
                 :src="item.summonerSpells.one.img"
-                width="48px"
-                height="48px"
               />
               <span class="text-gray-800 text-xs">{{
                 item.summonerSpells.one.name
@@ -77,8 +73,7 @@
               >
                 <img
                   :src="item.summonerSpells.two.img"
-                  width="48px"
-                  height="48px"
+                  class="w-[90rpx] h-[90rpx]"
                 />
                 <span class="text-gray-800 text-xs">{{
                   item.summonerSpells.two.name
@@ -128,14 +123,18 @@ onReady(async () => {
   socket.on('playerlist', (data: any) => {
     if (data) {
       wsData.playerlist = data
-      isShow.value = true
+      if (data.length != 0) {
+        isShow.value = true
+      }
     }
   })
 
   socket.on('gameInfo', (data: any) => {
     if (data) {
       wsData.gameInfo = data
-      isShow.value = true
+      if (data.length != 0) {
+        isShow.value = true
+      }
     }
   })
 })
