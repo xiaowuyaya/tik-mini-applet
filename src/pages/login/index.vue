@@ -7,10 +7,10 @@
     </view>
     <div class="mt-14 px-[60rpx]">
       <u-form :model="loginForm" label-width="120">
-        <u-form-item label="用户名"
+        <u-form-item label="登入名"
           ><u-input
             v-model="loginForm.username"
-            placeholder="请输入用户名"
+            placeholder="请输入登入名"
             type="text"
             max-length="16"
         /></u-form-item>
